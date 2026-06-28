@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sparkos"
+version = "0.1.0"
+description = "A natural-language TUI workbench for large-scale data and graph analysis."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "pydantic>=2.7",
+  "pyyaml>=6.0",
+  "textual>=0.85",
+]
+
+[project.optional-dependencies]
+spark = [
+  "pyspark>=3.5",
+]
+dev = [
+  "pytest>=8.0",
+]
+
+[project.scripts]
+sparkos = "sparkos.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["sparkos"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

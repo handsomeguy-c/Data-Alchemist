@@ -1,0 +1,17 @@
+version: 1
+root: skills
+skills:
+  - name: spark-sql
+    path: spark-sql/SKILL.md
+  - name: etl-pipeline
+    path: etl-pipeline/SKILL.md
+  - name: data-cleaning
+    path: data-cleaning/SKILL.md
+  - name: data-quality
+    path: data-quality/SKILL.md
+  - name: feature-engineering
+    path: feature-engineering/SKILL.md
+  - name: spark-job
+    path: spark-job/SKILL.md
+  - name: dag-diagnosis
+    path: dag-diagnosis/SKILL.md

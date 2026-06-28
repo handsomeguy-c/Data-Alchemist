@@ -1,0 +1,11 @@
+# AGI-吉尔伽美什 unified config
+
+master-model:
+  model: ""
+  url: ""
+  api-key: ""
+
+embedding-model:
+  model: ""
+  url: ""
+  api-key: ""

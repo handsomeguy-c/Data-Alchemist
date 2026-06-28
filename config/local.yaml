@@ -1,0 +1,151 @@
+# Local real-data demo config
+
+master-model:
+  model: ""
+  url: ""
+  api-key: ""
+
+embedding-model:
+  model: ""
+  url: ""
+  api-key: ""
+
+agent:
+  enabled: true
+  skills_path: skills
+
+runtime:
+  artifact_root: artifacts
+  job_store_path: artifacts/runtime/jobs.sqlite3
+  livy_url: null
+  history_server_url: http://localhost:18080
+  spark_master_url: spark://localhost:7077
+  spark_event_log_dir: file:${SPARKOS_REPO_ROOT}/artifacts/spark-events
+  spark_driver_host: host.docker.internal
+  spark_driver_port: 40499
+  docker_spark_container: sparkos-spark-master
+  docker_spark_master_url: spark://spark-master:7077
+
+vector_store:
+  provider: local-jsonl
+  collection: agi_gilgamesh_kb
+  path: artifacts/vector-store
+  url: null
+  api_key: null
+
+catalog:
+  datasets:
+    - name: transactions
+      description: Realistic payment transactions with users, devices, merchants, risk scores, chargebacks, and partitions.
+      path: ${SPARKOS_REPO_ROOT}/data/transactions.csv
+      format: csv
+      columns:
+        - {name: transaction_id, semantic_type: id}
+        - {name: user_id, semantic_type: entity}
+        - {name: device_id, semantic_type: entity}
+        - {name: merchant_id, semantic_type: entity}
+        - {name: ip, semantic_type: entity}
+        - {name: amount, semantic_type: metric}
+        - {name: currency, semantic_type: dimension}
+        - {name: channel, semantic_type: dimension}
+        - {name: risk_score, semantic_type: metric}
+        - {name: is_chargeback, semantic_type: dimension}
+        - {name: created_at, semantic_type: timestamp}
+        - {name: dt, semantic_type: timestamp}
+
+    - name: users
+      description: User profile table with account status, city, age, signup channel, and created date.
+      path: ${SPARKOS_REPO_ROOT}/data/users.csv
+      format: csv
+      columns:
+        - {name: user_id, semantic_type: entity}
+        - {name: city, semantic_type: dimension}
+        - {name: age, semantic_type: metric}
+        - {name: signup_channel, semantic_type: dimension}
+        - {name: status, semantic_type: dimension}
+        - {name: created_at, semantic_type: timestamp}
+        - {name: dt, semantic_type: timestamp}
+
+    - name: devices
+      description: Device profile table with operating system, model, first seen date, and device risk level.
+      path: ${SPARKOS_REPO_ROOT}/data/devices.csv
+      format: csv
+      columns:
+        - {name: device_id, semantic_type: entity}
+        - {name: os, semantic_type: dimension}
+        - {name: device_model, semantic_type: dimension}
+        - {name: first_seen_at, semantic_type: timestamp}
+        - {name: risk_level, semantic_type: dimension}
+        - {name: dt, semantic_type: timestamp}
+
+    - name: merchants
+      description: Merchant dimension table with category, city, and risk tier.
+      path: ${SPARKOS_REPO_ROOT}/data/merchants.csv
+      format: csv
+      columns:
+        - {name: merchant_id, semantic_type: entity}
+        - {name: merchant_name, semantic_type: dimension}
+        - {name: category, semantic_type: dimension}
+        - {name: city, semantic_type: dimension}
+        - {name: risk_tier, semantic_type: dimension}
+        - {name: dt, semantic_type: timestamp}
+
+    - name: user_events
+      description: User behavior events including login, add-card, checkout, refund, and password reset.
+      path: ${SPARKOS_REPO_ROOT}/data/user_events.csv
+      format: csv
+      columns:
+        - {name: event_id, semantic_type: id}
+        - {name: user_id, semantic_type: entity}
+        - {name: device_id, semantic_type: entity}
+        - {name: event_type, semantic_type: dimension}
+        - {name: ip, semantic_type: entity}
+        - {name: session_id, semantic_type: entity}
+        - {name: event_time, semantic_type: timestamp}
+        - {name: dt, semantic_type: timestamp}
+
+    - name: graph_edges
+      description: Real relationship edges extracted from transactions and behavior events for community detection.
+      path: ${SPARKOS_REPO_ROOT}/data/graph_edges.csv
+      format: csv
+      columns:
+        - {name: src, semantic_type: entity}
+        - {name: dst, semantic_type: entity}
+        - {name: edge_type, semantic_type: dimension}
+        - {name: weight, semantic_type: metric}
+        - {name: dt, semantic_type: timestamp}
+
+    - name: risk_labels
+      description: User-level 90-day risk labels for feature engineering and training-data validation.
+      path: ${SPARKOS_REPO_ROOT}/data/risk_labels.csv
+      format: csv
+      columns:
+        - {name: user_id, semantic_type: entity}
+        - {name: label, semantic_type: dimension}
+        - {name: label_reason, semantic_type: dimension}
+        - {name: tx_count_90d, semantic_type: metric}
+        - {name: amount_sum_90d, semantic_type: metric}
+        - {name: chargeback_count_90d, semantic_type: metric}
+        - {name: refund_count_90d, semantic_type: metric}
+        - {name: dt, semantic_type: timestamp}
+
+    - name: sparkos_demo.transactions
+      description: Hive demo transaction table.
+      path: sparkos_demo.transactions
+      format: hive
+      columns:
+        - {name: transaction_id, semantic_type: id}
+        - {name: user_id, semantic_type: entity}
+        - {name: device_id, semantic_type: entity}
+        - {name: amount, semantic_type: metric}
+        - {name: dt, semantic_type: timestamp}
+
+    - name: sparkos_demo.users
+      description: Hive demo user table.
+      path: sparkos_demo.users
+      format: hive
+      columns:
+        - {name: user_id, semantic_type: entity}
+        - {name: city, semantic_type: dimension}
+        - {name: status, semantic_type: dimension}
+        - {name: created_at, semantic_type: timestamp}
